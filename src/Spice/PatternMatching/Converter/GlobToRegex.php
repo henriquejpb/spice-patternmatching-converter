@@ -19,9 +19,12 @@ final class GlobToRegex implements ConverterInterface {
      */
     public function convert($pattern) {
         $pattern = preg_quote($pattern);
+        $pattern = preg_replace('/(?<![\\\\])\\\\\[/', '[', $pattern);
+        $pattern = preg_replace('/(?<![\\\\])\\\\\]/', ']', $pattern);
+        $pattern = preg_replace('/(?<![\\\\])\\\\\-/', '-', $pattern);
         $pattern = preg_replace('/(?<![\\\\])\\\\\*/', '.*', $pattern);
         $pattern = preg_replace("/(?<![\\\\])\\\\\?/", '.', $pattern);
-        $pattern = preg_replace("/(?<=\[)!/", '^', $pattern);
+        $pattern = preg_replace("/(?<=\[)\\\\\!/", '^', $pattern);
         $pattern = str_replace('\\\\\\', '\\', $pattern);
         return $pattern;
     }
